@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Nova Dark Cyberpunk Theme */
+    --background: 0 0% 4%;
+    --foreground: 0 0% 100%;
+
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 94%;
+
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 94%;
+
+    --primary: 187 100% 45%;
+    --primary-foreground: 0 0% 4%;
+
+    --secondary: 0 0% 14%;
+    --secondary-foreground: 0 0% 94%;
+
+    --muted: 0 0% 14%;
+    --muted-foreground: 0 0% 64%;
+
+    --accent: 187 100% 45%;
+    --accent-foreground: 0 0% 4%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 18%;
+    --input: 0 0% 18%;
+    --ring: 187 100% 45%;
+
+    --radius: 0.75rem;
+
+    /* Custom tokens */
+    --glow-cyan: 187 100% 50%;
+    --surface-glass: 0 0% 100%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', sans-serif;
+  }
+}
+
+@layer utilities {
+  .text-gradient-cyan {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(187 100% 50%), hsl(200 100% 70%));
+  }
+
+  .glow-cyan {
+    box-shadow: 0 0 20px hsl(187 100% 50% / 0.3), 0 0 60px hsl(187 100% 50% / 0.1);
+  }
+
+  .glow-cyan-strong {
+    box-shadow: 0 0 30px hsl(187 100% 50% / 0.5), 0 0 80px hsl(187 100% 50% / 0.2);
+  }
+
+  .glass {
+    background: hsl(0 0% 100% / 0.05);
+    backdrop-filter: blur(20px);
+    border: 1px solid hsl(0 0% 100% / 0.08);
+  }
+
+  .glass-strong {
+    background: hsl(0 0% 100% / 0.08);
+    backdrop-filter: blur(30px);
+    border: 1px solid hsl(0 0% 100% / 0.12);
+  }
+
+  .text-glow {
+    text-shadow: 0 0 40px hsl(187 100% 50% / 0.5);
+  }
+
+  .border-glow {
+    border-color: hsl(187 100% 50% / 0.3);
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: hsl(0 0% 4%);
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(0 0% 20%);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(187 100% 50% / 0.5);
+}
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
