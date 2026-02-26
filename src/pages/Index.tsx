@@ -1,5 +1,5 @@
 import Navbar from "../components/Navbar";
-import HeroSection from "../components/HeroSection";
+import HeadphoneScrollSequence from "../components/HeadphoneScrollSequence";
 import ExplodedViewSection from "../components/ExplodedViewSection";
 import ColorVariantsSection from "../components/ColorVariantsSection";
 import SpecsSection from "../components/SpecsSection";
@@ -20,7 +20,7 @@ const Index = () => {
   return (
     <div className="bg-background min-h-screen">
       <Navbar />
-      <HeroSection />
+      <HeadphoneScrollSequence />
       <ExplodedViewSection />
       <ColorVariantsSection />
       <SpecsSection />
