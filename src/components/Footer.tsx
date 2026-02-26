@@ -8,7 +8,8 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-heading font-bold text-xs">N</span>
+              {/* <span className="text-primary-foreground font-heading font-bold text-xs">N</span> */}
+              <img src="/nova.png" alt="logo" />
             </div>
             <span className="font-heading font-semibold text-foreground">
               NOVA AUDIO

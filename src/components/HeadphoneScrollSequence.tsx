@@ -18,31 +18,43 @@ const HeadphoneScrollSequence: React.FC = () => {
 
     // Preload images
     useEffect(() => {
-        const loadImages = async () => {
-            const loadedImages: HTMLImageElement[] = [];
+        let isMounted = true;
+
+        const loadImages = () => {
+            const loadedImages: HTMLImageElement[] = new Array(frameCount);
             let loadedCount = 0;
+
+            const checkFullLoad = () => {
+                if (!isMounted) return;
+                loadedCount++;
+                if (loadedCount === frameCount) {
+                    setImages(loadedImages);
+                    setLoaded(true);
+                }
+            };
 
             for (let i = 0; i < frameCount; i++) {
                 const img = new Image();
                 const indexStr = i.toString().padStart(3, '0');
                 img.src = `/HeadPhone_Images/headphone_${indexStr}.jpg`;
 
-                await new Promise((resolve) => {
-                    img.onload = () => {
-                        loadedImages.push(img);
-                        loadedCount++;
-                        if (loadedCount === frameCount) {
-                            setImages(loadedImages);
-                            setLoaded(true);
-                        }
-                        resolve(null);
-                    };
-                    img.onerror = () => resolve(null);
-                });
+                img.onload = () => {
+                    loadedImages[i] = img;
+                    checkFullLoad();
+                };
+                img.onerror = () => {
+                    console.error(`Failed to load frame ${i}`);
+                    loadedImages[i] = loadedImages[Math.max(0, i - 1)] || new Image();
+                    checkFullLoad();
+                };
             }
         };
 
         loadImages();
+
+        return () => {
+            isMounted = false;
+        };
     }, []);
 
     // Setup GSAP animation on canvas and text
@@ -53,11 +65,19 @@ const HeadphoneScrollSequence: React.FC = () => {
         const context = canvas.getContext('2d');
         if (!context) return;
 
+        // Set initial canvas size before first render
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let currentFrame = -1;
         const render = (frameIndex: number) => {
-            if (!images[frameIndex]) return;
+            // Optimization: avoid redundant draws
+            if (frameIndex === currentFrame) return;
+
             const img = images[frameIndex];
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+            if (!img || !img.complete) return;
+
+            currentFrame = frameIndex;
 
             const scale = Math.max(canvas.width / img.width, canvas.height / img.height);
             const x = (canvas.width - img.width * scale) / 2;
@@ -67,53 +87,78 @@ const HeadphoneScrollSequence: React.FC = () => {
             context.drawImage(img, x, y, img.width * scale, img.height * scale);
         };
 
+        const playhead = { frame: 0 };
         render(0);
 
-        const playhead = { frame: 0 };
+        // Utilize gsap.context for proper React cleanup
+        const ctx = gsap.context(() => {
+            const tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: containerRef.current,
+                    start: 'top top',
+                    end: '+=4000',
+                    pin: true,
+                    scrub: 1, // Smoother scrub prevents abrupt stopping
+                    invalidateOnRefresh: true,
+                },
+            });
 
-        const tl = gsap.timeline({
-            scrollTrigger: {
-                trigger: containerRef.current,
-                start: 'top top',
-                end: '+=4000',
-                pin: true,
-                scrub: 0.5,
-                onUpdate: () => render(Math.round(playhead.frame)),
-            },
-        });
+            // 0 to 80 frames over the timeline duration
+            tl.to(playhead, {
+                frame: frameCount - 1,
+                snap: "frame",
+                ease: 'none',
+                duration: 10,
+                onUpdate: () => render(Math.round(playhead.frame))
+            }, 0);
 
-        // 0 to 80 frames over the timeline duration
-        tl.to(playhead, {
-            frame: frameCount - 1,
-            snap: 'frame',
-            ease: 'none',
-            duration: 10,
-        }, 0);
+            // Text animations synced with frames using robust fromTo for bidirectional safety
+            // Text 1 fades in from frame 5-15, stays, fades out 25-30
+            if (text1Ref.current) {
+                tl.fromTo(text1Ref.current,
+                    { opacity: 0, y: 40 },
+                    { opacity: 1, y: 0, duration: 1 },
+                    (10 / 80) * 10
+                ).to(text1Ref.current,
+                    { opacity: 0, y: -20, duration: 1 },
+                    (25 / 80) * 10
+                );
+            }
 
-        // Text animations synced with frames
-        // Text 1 fades in from frame 5-15, stays, fades out 25-30
-        if (text1Ref.current) {
-            tl.to(text1Ref.current, { opacity: 1, y: 0, duration: 1 }, (10 / 80) * 10)
-                .to(text1Ref.current, { opacity: 0, y: -20, duration: 1 }, (25 / 80) * 10);
-        }
+            // Text 2 fades in from frame 35-45, fades out 55-60
+            if (text2Ref.current) {
+                tl.fromTo(text2Ref.current,
+                    { opacity: 0, y: 40 },
+                    { opacity: 1, y: 0, duration: 1 },
+                    (35 / 80) * 10
+                ).to(text2Ref.current,
+                    { opacity: 0, y: -20, duration: 1 },
+                    (55 / 80) * 10
+                );
+            }
 
-        // Text 2 fades in from frame 35-45, fades out 55-60
-        if (text2Ref.current) {
-            tl.to(text2Ref.current, { opacity: 1, y: 0, duration: 1 }, (35 / 80) * 10)
-                .to(text2Ref.current, { opacity: 0, y: -20, duration: 1 }, (55 / 80) * 10);
-        }
+            // Text 3 fades in from frame 65-75
+            if (text3Ref.current) {
+                tl.fromTo(text3Ref.current,
+                    { opacity: 0, scale: 0.9 },
+                    { opacity: 1, scale: 1, duration: 1 },
+                    (65 / 80) * 10
+                );
+            }
+        }, containerRef); // Scope to containerRef
 
-        // Text 3 fades in from frame 65-75
-        if (text3Ref.current) {
-            tl.to(text3Ref.current, { opacity: 1, scale: 1, duration: 1 }, (65 / 80) * 10);
-        }
+        const handleResize = () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            currentFrame = -1; // Force redraw on resize
+            render(Math.round(playhead.frame));
+        };
 
-        const handleResize = () => render(Math.round(playhead.frame));
         window.addEventListener('resize', handleResize);
 
         return () => {
             window.removeEventListener('resize', handleResize);
-            ScrollTrigger.getAll().forEach((st) => st.kill());
+            ctx.revert(); // Properly clean up GSAP animations and ScrollTriggers on unmount
         };
     }, [loaded, images]);
 
