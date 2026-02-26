@@ -23,5 +23,6 @@ This project is built with:
 - React
 - shadcn-ui
 - Tailwind CSS
+```
 
 PPT Link - https://www.canva.com/design/DAHCZdL8-P0/FCyTfIhdrrNEGMGK7ZqIcg/edit?utm_content=DAHCZdL8-P0&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton 
