@@ -2,13 +2,19 @@ import { useState, useEffect } from "react";
 
 /**
  * Navbar - Fixed top navigation with glassmorphism effect.
- * Becomes more opaque on scroll.
+ * Hidden during initial headphone scroll animation.
  */
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
+  const [showNavbar, setShowNavbar] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 50);
+    // The headphone scroll animation is pinned for 4000px.
+    // Reveal the navbar slightly before it finishes
+    const onScroll = () => setShowNavbar(window.scrollY > 3800);
+
+    // Check initial scroll on mount
+    onScroll();
+
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -19,15 +25,15 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled ? "glass-strong py-3" : "py-5"
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${showNavbar ? "translate-y-0 opacity-100 glass-strong py-3" : "-translate-y-full opacity-0 py-5 pointer-events-none"
+        }`}
     >
       <div className="container mx-auto flex items-center justify-between px-6">
         {/* Logo */}
         <button onClick={() => scrollTo("hero")} className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-            <span className="text-primary-foreground font-heading font-bold text-sm">N</span>
+            {/* <span className="text-primary-foreground font-heading font-bold text-sm">N</span> */}
+            <img src="/nova.png" alt="logo" />
           </div>
           <span className="font-heading font-semibold text-lg text-foreground">
             NOVA
