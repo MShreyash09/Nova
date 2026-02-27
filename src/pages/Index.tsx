@@ -6,6 +6,7 @@ import SpecsSection from "../components/SpecsSection";
 import PreOrderSection from "../components/PreOrderSection";
 import ReviewsSection from "../components/ReviewsSection";
 import Footer from "../components/Footer";
+import CanvasCursor from "../components/CanvasCursor";
 
 /**
  * Index - Main single-page scrolling experience for Nova Spatial Audio.
@@ -18,7 +19,8 @@ import Footer from "../components/Footer";
  */
 const Index = () => {
   return (
-    <div className="bg-background min-h-screen">
+    <div className="bg-background min-h-screen relative">
+      <CanvasCursor />
       <Navbar />
       <HeadphoneScrollSequence />
       <ExplodedViewSection />
