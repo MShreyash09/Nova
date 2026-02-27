@@ -12,6 +12,7 @@ const HeadphoneScrollSequence: React.FC = () => {
     const text1Ref = useRef<HTMLHeadingElement>(null);
     const text2Ref = useRef<HTMLDivElement>(null);
     const text3Ref = useRef<HTMLDivElement>(null);
+    const scrollIndicatorRef = useRef<HTMLDivElement>(null);
 
     const [images, setImages] = useState<HTMLImageElement[]>([]);
     const [loaded, setLoaded] = useState(false);
@@ -111,6 +112,15 @@ const HeadphoneScrollSequence: React.FC = () => {
                 duration: 10,
                 onUpdate: () => render(Math.round(playhead.frame))
             }, 0);
+
+            // Scroll indicator fades out as user starts scrolling (frames 0-5)
+            if (scrollIndicatorRef.current) {
+                tl.fromTo(scrollIndicatorRef.current,
+                    { opacity: 1, y: 0 },
+                    { opacity: 0, y: 10, duration: (5 / 80) * 10 },
+                    0
+                );
+            }
 
             // Text animations synced with frames using robust fromTo for bidirectional safety
             // Text 1 fades in from frame 5-15, stays, fades out 25-30
@@ -219,6 +229,17 @@ const HeadphoneScrollSequence: React.FC = () => {
                         >
                             Pre-Order Now
                         </button>
+                    </div>
+                </div>
+
+                {/* Scroll Indicator */}
+                <div
+                    ref={scrollIndicatorRef}
+                    className="absolute bottom-8 lg:bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center justify-center"
+                >
+                    <p className="text-primary/70 font-body text-xs tracking-[0.2em] uppercase mb-3 text-shadow">Scroll Down</p>
+                    <div className="w-[30px] h-[50px] border-2 border-primary/40 rounded-full flex justify-center p-2 shadow-[0_0_15px_rgba(0,163,255,0.2)]">
+                        <div className="w-1.5 h-2.5 bg-primary rounded-full animate-bounce shadow-[0_0_10px_rgba(0,163,255,0.8)]" />
                     </div>
                 </div>
             </div>
