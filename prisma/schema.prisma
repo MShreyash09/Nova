@@ -1,0 +1,105 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  UNPAID
+  PAID
+  FAILED
+  REFUNDED
+}
+
+model User {
+  id            String    @id @default(uuid()) @map("user_id")
+  firstName     String    @map("first_name")
+  lastName      String    @map("last_name")
+  email         String    @unique
+  passwordHash  String    @map("password_hash")
+  role          Role      @default(USER)
+  createdAt     DateTime  @default(now()) @map("created_at")
+  orders        Order[]
+  reviews       Review[]
+
+  @@map("users")
+}
+
+model Product {
+  id          String           @id @default(uuid()) @map("product_id")
+  name        String
+  description String?
+  category    String
+  basePrice   Decimal          @map("base_price") @db.Decimal(10, 2)
+  createdAt   DateTime         @default(now()) @map("created_at")
+  variants    ProductVariant[]
+  reviews     Review[]
+
+  @@map("products")
+}
+
+model ProductVariant {
+  id            String      @id @default(uuid()) @map("variant_id")
+  productId     String      @map("product_id")
+  product       Product     @relation(fields: [productId], references: [id])
+  color         String
+  sku           String      @unique @map("sku")
+  stockQuantity Int         @map("stock_quantity")
+  priceOverride Decimal?    @map("price_override") @db.Decimal(10, 2)
+  orderItems    OrderItem[]
+
+  @@map("product_variants")
+}
+
+model Order {
+  id            String        @id @default(uuid()) @map("order_id")
+  userId        String        @map("user_id")
+  user          User          @relation(fields: [userId], references: [id])
+  totalAmount   Decimal       @map("total_amount") @db.Decimal(10, 2)
+  orderStatus   OrderStatus   @default(PENDING) @map("order_status")
+  paymentStatus PaymentStatus @default(UNPAID) @map("payment_status")
+  createdAt     DateTime      @default(now()) @map("created_at")
+  orderItems    OrderItem[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id          String         @id @default(uuid()) @map("order_item_id")
+  orderId     String         @map("order_id")
+  order       Order          @relation(fields: [orderId], references: [id])
+  variantId   String         @map("variant_id")
+  variant     ProductVariant @relation(fields: [variantId], references: [id])
+  quantity    Int
+  lockedPrice Decimal        @map("locked_price") @db.Decimal(10, 2)
+
+  @@map("order_items")
+}
+
+model Review {
+  id        String   @id @default(uuid()) @map("review_id")
+  productId String   @map("product_id")
+  product   Product  @relation(fields: [productId], references: [id])
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id])
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("reviews")
+}
