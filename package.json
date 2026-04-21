@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "server": "ts-node-dev --respawn --transpile-only server/index.ts",
-    "build": "vite build",
+    "start": "npx ts-node server/index.ts",
+    "build": "npx prisma generate && vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",

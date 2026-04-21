@@ -1,0 +1,37 @@
+services:
+  # 1. Backend Web Service
+  - type: web
+    name: headphone-backend
+    env: node
+    plan: free
+    buildCommand: npm install && npx prisma generate
+    startCommand: npm run start
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: headphone-db
+          property: connectionString
+      - key: PORT
+        value: 3001
+      - key: NODE_ENV
+        value: production
+
+  # 2. Frontend Static Site
+  - type: static
+    name: headphone-frontend
+    env: static
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        # Note: You will need to update this with your backend URL 
+        # after the backend service is created.
+        value: https://headphone-backend.onrender.com
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+databases:
+  - name: headphone-db
+    plan: free
