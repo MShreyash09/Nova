@@ -2,10 +2,10 @@ services:
   # 1. Backend Web Service
   - type: web
     name: headphone-backend
-    runtime: node
+    env: node
     plan: free
-    buildCommand: bun install && bun x prisma generate
-    startCommand: npm run start
+    buildCommand: npm install && npx prisma generate
+    startCommand: npm start
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -19,7 +19,7 @@ services:
   # 2. Frontend Static Site
   - type: web
     name: headphone-frontend
-    runtime: static
+    env: static
     buildCommand: npm install && npm run build
     staticPublishPath: dist
     envVars:
