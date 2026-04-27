@@ -73,6 +73,8 @@ model Order {
   totalAmount   Decimal       @map("total_amount") @db.Decimal(10, 2)
   orderStatus   OrderStatus   @default(PENDING) @map("order_status")
   paymentStatus PaymentStatus @default(UNPAID) @map("payment_status")
+  razorpayOrderId   String?   @unique @map("razorpay_order_id")
+  razorpayPaymentId String?   @map("razorpay_payment_id")
   createdAt     DateTime      @default(now()) @map("created_at")
   orderItems    OrderItem[]
 

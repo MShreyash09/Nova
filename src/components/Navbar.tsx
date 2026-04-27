@@ -1,11 +1,15 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 /**
  * Navbar - Fixed top navigation with glassmorphism effect.
  * Hidden during initial headphone scroll animation.
+ * Shows auth state (login button or user menu).
  */
 export default function Navbar() {
   const [showNavbar, setShowNavbar] = useState(false);
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     // The headphone scroll animation is pinned for 4000px.
@@ -58,13 +62,58 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* CTA */}
-        <button
-          onClick={() => scrollTo("preorder")}
-          className="px-5 py-2 rounded-full bg-primary text-primary-foreground font-body font-medium text-sm hover:glow-cyan transition-all duration-300"
-        >
-          Pre-Order
-        </button>
+        {/* Right side: Auth + CTA */}
+        <div className="flex items-center gap-3">
+          {user ? (
+            <>
+              {/* User avatar + name */}
+              <div className="hidden sm:flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center">
+                  <span className="text-primary font-heading font-bold text-xs">
+                    {user.firstName[0]}{user.lastName[0]}
+                  </span>
+                </div>
+                <span className="text-sm font-body text-foreground">
+                  {user.firstName}
+                </span>
+              </div>
+
+              {/* Logout button */}
+              <button
+                onClick={logout}
+                className="px-4 py-2 rounded-full border border-border text-muted-foreground font-body text-sm hover:border-destructive/50 hover:text-destructive transition-all duration-300"
+              >
+                Logout
+              </button>
+
+              {/* Pre-Order CTA */}
+              <button
+                onClick={() => scrollTo("preorder")}
+                className="px-5 py-2 rounded-full bg-primary text-primary-foreground font-body font-medium text-sm hover:glow-cyan transition-all duration-300"
+              >
+                Pre-Order
+              </button>
+            </>
+          ) : (
+            <>
+              {/* Login button */}
+              <Link
+                to="/login"
+                className="px-4 py-2 rounded-full border border-border text-muted-foreground font-body text-sm hover:border-primary/50 hover:text-foreground transition-all duration-300"
+              >
+                Login
+              </Link>
+
+              {/* Pre-Order CTA - scrolls to section, which will prompt login */}
+              <button
+                onClick={() => scrollTo("preorder")}
+                className="px-5 py-2 rounded-full bg-primary text-primary-foreground font-body font-medium text-sm hover:glow-cyan transition-all duration-300"
+              >
+                Pre-Order
+              </button>
+            </>
+          )}
+        </div>
       </div>
     </nav>
   );
