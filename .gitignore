@@ -1,3 +1,19 @@
-node_modules
+# Dependencies
+node_modules/
 
+# Environment variables
+.env
+.env.*
+
+# Build output
+dist/
+build/
+.next/
+
+# IDE and OS files
+.DS_Store
+.vscode/
+.idea/
+
+# Prisma
 /generated/prisma

@@ -1,9 +1,10 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { prisma } from './db';
 
 dotenv.config();
+
+import { prisma } from './db';
 
 const app = express();
 const PORT = process.env.PORT || 3001;

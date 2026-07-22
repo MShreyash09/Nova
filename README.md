@@ -94,3 +94,27 @@ Nova is a state-of-the-art e-commerce platform for high-end audio products, feat
 
 - **PPT Presentation**: [Canva Link](https://www.canva.com/design/DAHCZdL8-P0/FCyTfIhdrrNEGMGK7ZqIcg/edit?utm_content=DAHCZdL8-P0&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 - **License**: MIT
+
+---
+
+## ⚙️ Local Setup & Required APIs
+
+To run this project locally, you must configure the environment variables correctly.
+
+1. **Create the Environment File**:
+   In the root of your project, create a new file named `.env`.
+
+2. **Add Required Configuration**:
+   Copy the following structure into your `.env` file and replace the placeholder values with your actual credentials:
+
+   ```env
+   # Database Configuration (Required)
+   # Example: postgresql://user:password@localhost:5432/headphone_db?schema=public
+   DATABASE_URL="your_database_url_here"
+
+   # Add any other required API keys below (e.g., Payment Gateway, Cloud Storage, etc.)
+   # API_KEY_EXAMPLE="your_api_key"
+   ```
+
+3. **Start the Application**:
+   Once the `.env` file is set up, install dependencies and start the local servers as described in the [Getting Started](#getting-started) section.

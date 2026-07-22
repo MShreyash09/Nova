@@ -2,10 +2,10 @@ services:
   # 1. Backend Web Service
   - type: web
     name: headphone-backend
-    runtime: node
+    env: node
     plan: free
-    buildCommand: npm install --include=dev && npx prisma generate
-    startCommand: npm run server
+    buildCommand: npm install && npx prisma generate
+    startCommand: npm start
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -19,8 +19,8 @@ services:
   # 2. Frontend Static Site
   - type: web
     name: headphone-frontend
-    runtime: static
-    buildCommand: npm install && npm run build
+    env: static
+    buildCommand: npm install --include=dev && npm run build
     staticPublishPath: dist
     envVars:
       - key: VITE_API_URL
