@@ -6,7 +6,7 @@ Nova is a state-of-the-art e-commerce platform for high-end audio products, feat
 
 ## ✨ Features
 
-- **Interactive Scroll Sequence**: Smooth, cinema-quality headphone animations that respond to user scrolling.
+- **Interactive Scroll Sequence**: Smooth, cinema-quality headphone animations that respond to user scrolling effect.
 - **Glassmorphic Design**: Modern, premium aesthetic using transparent layers and vibrant gradients.
 - **Canvas Cursor Follower**: Sophisticated custom cursor animation for enhanced interactivity.
 - **Full-stack Database**: Integrated **PostgreSQL** database managed via **Prisma ORM**.
